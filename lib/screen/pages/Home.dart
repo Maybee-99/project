@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:food/controller/category.dart';
 import 'package:food/controller/product.dart';
 import 'package:food/controller/unit.dart';
+import 'package:food/screen/view/Cart.dart';
+import 'package:food/screen/view/ProductDetailView.dart';
 import 'package:food/service/categoryService.dart';
 import 'package:food/service/productService.dart';
+import 'package:intl/intl.dart';
 
 final List<String> imgList = [
   'assets/images/1.jpg',
@@ -38,6 +41,11 @@ class _HomeState extends State<Home> {
     loadCategorise();
     loadProducts();
     super.initState();
+  }
+
+  String formatPrice(int price) {
+    final formatter = NumberFormat("#,##0");
+    return "₭${formatter.format(price)}";
   }
 
   void loadCategorise() async {
@@ -217,6 +225,16 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        backgroundColor: Colors.amber,
+        onPressed:
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => Cart()),
+            ),
+        child: Icon(Icons.shopping_cart, color: Colors.black),
+      ),
     );
   }
 
@@ -286,9 +304,19 @@ class _HomeState extends State<Home> {
         itemCount: _products.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
+          childAspectRatio: 0.75, // Optional: better layout fit
         ),
         itemBuilder: (context, index) {
+          final product = _products[index];
           return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ProductDetailView(product: product),
+                ),
+              );
+            },
             child: Card(
               elevation: 2,
               color: Colors.white,
@@ -301,10 +329,10 @@ class _HomeState extends State<Home> {
                       topRight: Radius.circular(10),
                     ),
                     child: CachedNetworkImage(
-                      imageUrl: _products[index]['image_url'] ?? '',
+                      imageUrl: product['image_url'] ?? '',
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      height: 90,
+                      height: 140,
                       errorWidget:
                           (context, url, error) =>
                               Icon(Icons.image, size: 50, color: Colors.green),
@@ -313,14 +341,14 @@ class _HomeState extends State<Home> {
                   Expanded(
                     child: ListTile(
                       title: Text(
-                        _products[index]['product_name'],
+                        product['product_name'],
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       subtitle: Text(
-                        "${_products[index]['sale_price']} ₭/ ${_products[index]['unit_name']}",
+                        "${formatPrice(product['sale_price'])}/ ${product['unit_name']}",
                         style: TextStyle(fontSize: 12, color: Colors.black87),
                       ),
                     ),
@@ -333,4 +361,64 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
+  // Widget product() {
+  //   if (_products.isEmpty) {
+  //     return Center(child: CircularProgressIndicator(color: Colors.green));
+  //   }
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 5),
+  //     child: GridView.builder(
+  //       physics: PageScrollPhysics(),
+  //       shrinkWrap: true,
+  //       itemCount: _products.length,
+  //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //         crossAxisCount: 2,
+  //       ),
+  //       itemBuilder: (context, index) {
+  //         return GestureDetector(
+  //           child: Card(
+  //             elevation: 2,
+  //             color: Colors.white,
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.stretch,
+  //               children: [
+  //                 ClipRRect(
+  //                   borderRadius: BorderRadius.only(
+  //                     topLeft: Radius.circular(10),
+  //                     topRight: Radius.circular(10),
+  //                   ),
+  //                   child: CachedNetworkImage(
+  //                     imageUrl: _products[index]['image_url'] ?? '',
+  //                     width: double.infinity,
+  //                     fit: BoxFit.cover,
+  //                     height: 90,
+  //                     errorWidget:
+  //                         (context, url, error) =>
+  //                             Icon(Icons.image, size: 50, color: Colors.green),
+  //                   ),
+  //                 ),
+  //                 Expanded(
+  //                   child: ListTile(
+  //                     title: Text(
+  //                       _products[index]['product_name'],
+  //                       style: TextStyle(
+  //                         fontSize: 14,
+  //                         fontWeight: FontWeight.bold,
+  //                       ),
+  //                     ),
+  //                     subtitle: Text(
+  //                       "${_products[index]['sale_price']} ₭/ ${_products[index]['unit_name']}",
+  //                       style: TextStyle(fontSize: 12, color: Colors.black87),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 }
