@@ -33,7 +33,7 @@ class CategoryService {
       },
       body: jsonEncode({"category_name": category}),
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       return jsonDecode(response.body);
     } else if (response.statusCode == 400) {
       showAlert(context, "ຂໍ້ຄວາມ", "ຂໍ້ມູນຊ້ຳກັນ", "ຕົກລົງ");

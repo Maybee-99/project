@@ -104,16 +104,28 @@ class ProductService {
     BuildContext context,
     String id,
   ) async {
-    var response = await http.delete(
+    final response = await http.delete(
       Uri.parse(url + "products/$id"),
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
       },
     );
+
+    print('Delete status: ${response.statusCode}');
+    print('Delete response: ${response.body}');
+
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      try {
+        final json = jsonDecode(response.body);
+        String errorMessage = json['message'] ?? "ລຶບຜິດພາດ";
+        showAlert(context, "ຂໍ້ຄວາມ", errorMessage, "ຕົກລົງ");
+      } catch (e) {
+        showAlert(context, "ຂໍ້ຄວາມ", e.toString(), "ຕົກລົງ");
+      }
+
       return null;
     }
   }

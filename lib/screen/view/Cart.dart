@@ -106,8 +106,10 @@ class _CartState extends State<Cart> {
                 IconButton(
                   icon: const Icon(Icons.remove_circle, color: Colors.red),
                   onPressed: () {
-                    CartService.updateItemQuantity(product, quantity - 1);
-                    setState(() {});
+                    if (quantity > 1) {
+                      CartService.updateItemQuantity(product, quantity - 1);
+                      setState(() {});
+                    }
                   },
                 ),
                 Text('$quantity'),

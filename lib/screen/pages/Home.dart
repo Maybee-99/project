@@ -6,6 +6,7 @@ import 'package:food/controller/product.dart';
 import 'package:food/controller/unit.dart';
 import 'package:food/screen/view/Cart.dart';
 import 'package:food/screen/view/ProductDetailView.dart';
+import 'package:food/service/cart_service.dart';
 import 'package:food/service/categoryService.dart';
 import 'package:food/service/productService.dart';
 import 'package:intl/intl.dart';
@@ -225,16 +226,47 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-        backgroundColor: Colors.amber,
-        onPressed:
-            () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => Cart()),
+      floatingActionButton: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          FloatingActionButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
             ),
-        child: Icon(Icons.shopping_cart, color: Colors.black),
+            backgroundColor: Colors.amber,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => Cart()),
+              );
+            },
+            child: const Icon(Icons.shopping_cart, color: Colors.black),
+          ),
+          if (CartService.cartItems.isNotEmpty)
+            Positioned(
+              right: -2,
+              top: -2,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+                constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+                child: Text(
+                  '${CartService.cartItems.length}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+        ],
       ),
+    
     );
   }
 

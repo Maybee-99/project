@@ -80,21 +80,19 @@ class _ProductsState extends State<Products> {
               child: Text("ຍົກເລີກ", style: TextStyle(color: Colors.black)),
             ),
             TextButton(
-              onPressed: () {
-                productAIP
-                    .deleteProduct(
-                      context,
-                      _products[index]['product_id'].toString(),
-                    )
-                    .then((value) {
-                      if (value != null) {
-                        setState(() {
-                          _products.removeAt(index);
-                        });
-                        loadProducts();
-                      }
-                    });
-                Navigator.pop(context);
+              onPressed: () async {
+                Navigator.pop(context); // Close dialog first
+
+                final result = await productAIP.deleteProduct(
+                  context,
+                  _products[index]['product_id'].toString(),
+                );
+
+                if (result != null) {
+                  setState(() {
+                    _products.removeAt(index);
+                  });
+                }
               },
               child: Text("ຕົກລົງ", style: TextStyle(color: Colors.black)),
             ),
@@ -257,7 +255,7 @@ class _ProductsState extends State<Products> {
             child: Text("ແກ້ໄຂສິນຄ້າ", style: TextStyle(fontSize: 16)),
           ),
           content: Container(
-            height: 400,
+            height: 460,
             child: Material(
               color: Colors.transparent,
               child: SingleChildScrollView(

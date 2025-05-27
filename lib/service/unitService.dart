@@ -28,13 +28,12 @@ class UnitService {
       },
       body: jsonEncode({"unit_name": category}),
     );
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       return jsonDecode(response.body);
     } else if (response.statusCode == 400) {
       showAlert(context, "ຂໍ້ຄວາມ", "ຂໍ້ມູນຊ້ຳກັນ", "ຕົກລົງ");
       return null;
     } else {
-      showAlert(context, "ຂໍ້ຄວາມ", "ບໍ່ສາມາດໂຫຼດຂໍ້ມູນ", "ຕົກລົງ");
       return null;
     }
   }

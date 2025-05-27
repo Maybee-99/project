@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food/service/categoryService.dart';
-import 'package:iconsax/iconsax.dart';
 
 class Category extends StatefulWidget {
   const Category({super.key});
